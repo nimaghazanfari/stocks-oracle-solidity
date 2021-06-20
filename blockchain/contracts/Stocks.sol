@@ -12,6 +12,11 @@ contract Stocks {
     /// Contract owner
     address oracleOwner;
 
+    modifier onlyOwner() {
+        require(oracleOwner == msg.sender);
+        _;
+    }
+
     constructor() {
         oracleOwner = msg.sender;
     }
@@ -21,11 +26,27 @@ contract Stocks {
         bytes4 symbol,
         uint256 price,
         uint256 volume
-    ) public {}
+    ) public onlyOwner {
+        stockQuote[symbol] = stock({price: price, volume: volume});
+    }
 
     /// Get the value of a stock
-    function getStockPrice(bytes4 symbol) public view returns (uint256) {}
+    function getStockPrice(bytes4 symbol)
+        public
+        view
+        onlyOwner
+        returns (uint256)
+    {
+        return stockQuote[symbol].price;
+    }
 
     /// Get the value of volume traded for a stock
-    function getStockVolume(bytes4 symbol) public view returns (uint256) {}
+    function getStockVolume(bytes4 symbol)
+        public
+        view
+        onlyOwner
+        returns (uint256)
+    {
+        return stockQuote[symbol].volume;
+    }
 }
