@@ -52,8 +52,9 @@ app.get('/get-stocks-abi', (req, res) => {
 app.get('/query/:what', async (req, res) => {
     res.header("Content-Type", 'application/json');
     const symbol = req.params.what;
+    
     if (symbol.length > 4) {
-        res.send('Error!');
+        res.status(400).send('Invalid Length!');
         return;
     }
 
@@ -67,7 +68,7 @@ app.get('/query/:what', async (req, res) => {
         const volume = parseInt(result.data["Global Quote"]["06. volume"]);
 
         if (isNaN(price) || isNaN(volume)) {
-            res.send('Invalid Request!');
+            res.status(400).send('Invalid Request!');
             return;
         }
 
@@ -81,8 +82,8 @@ app.get('/query/:what', async (req, res) => {
             res.send('Query Done!');
         } catch (error) {
             console.log(error);
-            res.send('Error Happened!');
+            res.status(400).send('Error Happened!');
         }
     }
-    else res.send('Empty Result!');
+    else res.status(400).send('Empty Result!');
 });
